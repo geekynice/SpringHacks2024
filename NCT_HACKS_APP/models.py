@@ -33,3 +33,17 @@ class Preferences(models.Model):
 
     def __str__(self):
         return f"{self.user.id}'s Preferences"
+
+
+class Meal(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    name = models.CharField(max_length=255)
+    calories = models.CharField(max_length=255)  
+    desc = models.TextField()
+    health_benefits = models.JSONField(default=list)  
+    recipe = models.JSONField(default=list)  
+    date_added = models.DateTimeField(auto_now_add=True) 
+
+    def __str__(self):
+        return f"{self.user.username}'s Meal: {self.name}"
