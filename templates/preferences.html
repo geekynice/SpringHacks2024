@@ -1,0 +1,32 @@
+<!-- preferences.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Preferences</title>
+</head>
+<body>
+    <h1>Set Your Preferences</h1>
+    <form method="post" action="{% url 'preferences' %}">
+        {% csrf_token %}
+        <label for="diet_option">Diet Option:</label>
+        <select id="diet_option" name="diet_option">
+            <option value="Vegan">Vegan</option>
+            <option value="Non-veg">Non-veg</option>
+            <option value="Veg">Veg</option>
+            <option value="Gluten free">Gluten free</option>
+        </select><br><br>
+        
+        <label for="nut_allergic">Nut Allergic:</label>
+        <input type="checkbox" id="nut_allergic" name="nut_allergic"><br><br>
+        
+        <label for="goal">Goal:</label>
+        <select id="goal" name="goal">
+            <option value="lose_weight">Lose weight</option>
+            <option value="gain_mass">Gain mass</option>
+            <option value="maintain_weight">Maintain weight</option>
+        </select><br><br>
+
+        <button type="submit">Save Preferences</button>
+    </form>
+</body>
+</html>
