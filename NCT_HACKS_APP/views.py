@@ -33,14 +33,10 @@ def signup_view(request):
             height=height
         )
 
-        # Optionally, create preferences for the user
-        # You can customize this part based on your application logic
-
-        # Authenticate and login the user
         user = authenticate(username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('dashboard')  # Replace 'dashboard' with your desired URL after signup
+            return redirect('index')  
 
     return render(request, 'signup.html')
 
