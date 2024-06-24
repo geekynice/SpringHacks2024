@@ -1,0 +1,9 @@
+{% load static %}
+<header class="flex items-center justify-between mb-8">
+    <h1 class="text-2xl font-bold text-gray-800">Welcome, {{ user.username }}</h1>
+    <div class="flex items-center">
+      <img src="{{ userDetails.profile_pic.url }}" alt="{{ user.username }}" class="h-8 w-8 rounded-full mr-2">
+
+      <span class="text-gray-700">{{ user.username }}</span>
+    </div>
+  </header>

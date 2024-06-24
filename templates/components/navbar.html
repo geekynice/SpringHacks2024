@@ -1,0 +1,59 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-light bg-warning fixed-top">
+    <div class="container">
+      <!-- Logo -->
+      <a class="navbar-brand" href="{% url 'index' %}">
+        <img src="{% static 'images/logo.png' %}" class="w-52 bg-light p-2 rounded" alt="Logo of Nourish" style="width: 200px;">
+      </a>
+  
+      <!-- Mobile Menu Button -->
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+  
+      <!-- Navigation Links -->
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#home-section">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#about-section">About Us</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#work-section">How It Works</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#involved-section">Get Involved</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#team-section">Meet Our Team</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#contact-section">Contact Us</a>
+          </li>
+        </ul>
+        <!-- Sign-in and Create Account Buttons -->
+        <div class="navbar-nav">
+          <a href="{% url 'login'%}" class="btn btn-success mr-2">Sign In</a>
+          <a href="{% url 'signup'%}" class="btn btn-primary">Create Account</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<!-- JavaScript for Mobile Menu Toggle -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileNavLinks = document.getElementById('mobile-nav-links');
+
+    mobileMenuBtn.addEventListener('click', function () {
+      mobileNavLinks.classList.toggle('hidden');
+    });
+  });
+</script>
