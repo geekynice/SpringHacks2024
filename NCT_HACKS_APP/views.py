@@ -16,6 +16,19 @@ from groq import Groq
 import google.generativeai as genai
 from google.generativeai import GenerativeModel, configure
 import logging
+import pathlib
+import os
+import google.generativeai as genai
+from django.http import JsonResponse, HttpResponse
+from django.conf import settings
+from django.shortcuts import render
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+import re
+
+genai.configure(api_key=os.environ['GEMINI_API_KEY'])
+model = genai.GenerativeModel('gemini-1.5-flash')
+from django.http import HttpResponseRedirect, HttpResponseServerError
 
 @login_required
 def index(request):
@@ -25,7 +38,33 @@ def dashboard_view(request):
     return render(request, 'dashboard.html')
 
 def meal_from_photo_view(request):
-    return render(request, 'meal_from_photo.html' )
+    if request.method == 'POST' and request.FILES['image']:
+        try:
+            # Handle file upload
+            uploaded_file = request.FILES['image']
+            file_path = os.path.join(settings.MEDIA_ROOT, uploaded_file.name)
+            
+            with open(file_path, 'wb+') as destination:
+                for chunk in uploaded_file.chunks():
+                    destination.write(chunk)
+
+            # Read image data
+            image_data = pathlib.Path(file_path).read_bytes()
+
+            # Define prompt and generate content
+            prompt = "Generate 3 healthy meal from the items in fridge and show calories, instruction, ingridients & health benefits, AND ALWAYS GIVE THE RESPONSE IN SAME STRUCTURE in html table format"
+            response = model.generate_content([prompt, {'mime_type': 'image/jpeg', 'data': image_data}])
+
+            # Return raw JSON response
+            return render(request, 'meal_from_photo.html', {'response': response.text})
+
+        except Exception as e:
+            # Log the exception or handle it appropriately
+            print(f"Error generating meals: {str(e)}")
+            return HttpResponseServerError("Error generating meals. Please try again later.")
+
+    # Render initial form if GET request or invalid POST
+    return render(request, 'meal_from_photo.html')
 
 # Initialize Groq client
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
@@ -98,7 +137,7 @@ def parse_response(completion):
     return ai_response.strip(), ingredients, recipe_steps, instructions, health_benefits
 
 def MealSuggestionView(request):
-    csv_file_path = r'C:\Users\prajw\Downloads\NCT Hackathon - Spring 2024\SpringHacks2024\cleaned-data.csv'
+    csv_file_path = r'cleaned-data.csv'
     df = load_csv(csv_file_path)
 
     if request.method == 'POST':
@@ -223,7 +262,7 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('meal')
+            return redirect('dashboard')
         else:
             messages.error(request, 'Invalid credentials')
 
@@ -255,47 +294,3 @@ def preferences_view(request):
 def logout_view(request):
     logout(request)
     return redirect('login')
-
-
-# mealgen/views.py
-import pathlib
-import os
-import google.generativeai as genai
-from django.http import JsonResponse, HttpResponse
-from django.conf import settings
-from django.shortcuts import render
-from django.core.files.storage import default_storage
-from django.core.files.base import ContentFile
-import re
-
-genai.configure(api_key=os.environ['GEMINI_API_KEY'])
-model = genai.GenerativeModel('gemini-1.5-flash')
-from django.http import HttpResponseRedirect, HttpResponseServerError
-def generate_meals(request):
-    if request.method == 'POST' and request.FILES['image']:
-        try:
-            # Handle file upload
-            uploaded_file = request.FILES['image']
-            file_path = os.path.join(settings.MEDIA_ROOT, uploaded_file.name)
-            
-            with open(file_path, 'wb+') as destination:
-                for chunk in uploaded_file.chunks():
-                    destination.write(chunk)
-
-            # Read image data
-            image_data = pathlib.Path(file_path).read_bytes()
-
-            # Define prompt and generate content
-            prompt = "Generate 3 healthy meal from the items in fridge and show calories, instruction, ingridients & health benefits, AND ALWAYS GIVE THE RESPONSE IN SAME STRUCTURE in html table format"
-            response = model.generate_content([prompt, {'mime_type': 'image/jpeg', 'data': image_data}])
-
-            # Return raw JSON response
-            return render(request, 'recipe.html', {'response': response.text})
-
-        except Exception as e:
-            # Log the exception or handle it appropriately
-            print(f"Error generating meals: {str(e)}")
-            return HttpResponseServerError("Error generating meals. Please try again later.")
-
-    # Render initial form if GET request or invalid POST
-    return render(request, 'upload.html')
