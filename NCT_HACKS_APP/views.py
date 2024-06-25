@@ -32,6 +32,8 @@ def query_model(prompt):
         "role": "user",
         "content": prompt
     }]
+    print("Querying model with prompt:")
+    print(prompt)
     completion = client.chat.completions.create(
         model="llama3-70b-8192",  # Replace with your desired model
         messages=messages,
@@ -47,28 +49,47 @@ def parse_response(completion):
     ai_response = ""
     ingredients = []
     recipe_steps = []
+    instructions = []
+    health_benefits = []
     current_section = None
     
+    # Join all chunks into a single string
     for chunk in completion:
         ai_response += chunk.choices[0].delta.content or ""
-        lines = ai_response.split("\n")
-        
-        for line in lines:
-            if line.startswith("**Recipe:**"):
-                current_section = "recipe"
-            elif line.startswith("**Instructions:**"):
-                current_section = "instructions"
-            elif current_section == "recipe":
-                if line.strip().startswith("*"):
-                    ingredients.append(line.strip("* ").strip())
-            elif current_section == "instructions":
-                if line.strip().startswith("1.") or line.strip().startswith("2.") or line.strip().startswith("3.") or line.strip().startswith("4.") or line.strip().startswith("5.") or line.strip().startswith("6.") or line.strip().startswith("7."):
-                    recipe_steps.append(line.strip())
+    
+    # Split by lines
+    lines = ai_response.split("\n")
+    
+    # Process each line
+    for line in lines:
+        if line.startswith("**Health Benefits:**"):
+            current_section = "health benefits"
+        elif line.startswith("**Recipe:**"):
+            current_section = "instructions"
+        elif current_section == "health benefits" and line.strip().startswith("* "):
+            health_benefits.append(line.strip("* ").strip())
+        elif line.startswith("Instructions:"):
+            current_section = "instructions"
+        elif current_section == "instructions":
+            if line.strip().startswith(("1. ", "2. ", "3. ", "4. ", "5. ", "6. ", "7. ")):
+                recipe_steps.append(line.strip())
+                instructions.append(line.strip())
+                ingredients.append(line.strip("* ").strip())
 
-    return ai_response.strip(), ingredients, recipe_steps
+
+
+    ingredients = [ingredient.strip() for ingredient in ingredients]
+    instructions = [instruction.strip() for instruction in instructions]
+    recipe_steps = [recipe.strip() for recipe in recipe_steps]
+    health_benefits = [benefit.strip('*').strip() for benefit in health_benefits]
+    print(ingredients)
+    print(recipe_steps)
+    print(instructions)
+    print("Health Benefits: ", health_benefits)
+    
+    return ai_response.strip(), ingredients, recipe_steps, instructions, health_benefits
 
 def MealSuggestionView(request):
-    # Load the CSV file (replace with your path)
     csv_file_path = '/Users/nicebanjara/Desktop/Projects/quiz_ai/cleaned-data.csv'
     df = load_csv(csv_file_path)
 
@@ -91,28 +112,51 @@ def MealSuggestionView(request):
         prompt += f"Goal: {goal}\n"
         prompt += f"Dataset Preview:\n{df.head().to_string()}"
 
+        print("Generated prompt:")
+        print(prompt)
+
         # Query the model
         completion = query_model(prompt)
 
-        related_data, ingredients, recipe_steps = parse_response(completion)
+        print("Model completion received:")
+        print(completion)
 
+        # Parse model response
+        related_data, ingredients, recipe_steps, instructions, health_benefits = parse_response(completion)
+
+        print("Parsed response:")
+        print(f"Related Data:\n{related_data}")
+        print(f"Ingredients:\n{ingredients}")
+        print(f"Recipe Steps:\n{recipe_steps}")
+        print(f"Instructions:\n{instructions}")
+        print(f"Health Benefits:\n{health_benefits}")
+
+        # Extract meal details
         meal_name = ""
         calories = ""
         price = ""
         for line in related_data.splitlines():
-            if line.startswith("**Meal Name:**"):
-                meal_name = line.split(":")[1].strip()
-            elif line.startswith("**Calories:**"):
-                calories = line.split(":")[1].strip()
-            elif line.startswith("**Price:**"):
-                price = line.split(":")[1].strip()
+            clean_line = line.strip()
+            if clean_line.startswith("**Meal Name:**"):
+                meal_name = clean_line.replace("**Meal Name:**", "").strip('*').strip()
+            elif clean_line.startswith("**Calories:**"):
+                calories = clean_line.replace("**Calories:**", "").strip('*').strip()
+            elif clean_line.startswith("**Price:**"):
+                price = clean_line.replace("**Price:**", "").strip('*').strip()
 
+        print(f"Extracted Meal Name: {meal_name}")
+        print(f"Extracted Calories: {calories}")
+        print(f"Extracted Price: {price}")
+
+        # Prepare context for rendering template
         context = {
             'meal_name': meal_name,
             'calories': calories,
             'price': price,
             'ingredients': ingredients,
             'recipe_steps': recipe_steps,
+            'instructions': instructions,
+            'health_benefits': health_benefits,
             'diet_option': diet_option,
             'nut_allergic': nut_allergic,
             'goal': goal,
@@ -125,7 +169,12 @@ def MealSuggestionView(request):
     context = {
         'dataset_preview': df.head().to_html(),
     }
+
+    print("Rendering initial page with dataset preview:")
+    print(context)
+
     return render(request, 'meal.html', context)
+
 
 User = get_user_model()
 
