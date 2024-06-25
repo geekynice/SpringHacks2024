@@ -1,0 +1,9 @@
+<html>
+  <body>
+    <form method="post" enctype="multipart/form-data" action="{% url 'generate_meal' %}">
+      {% csrf_token %}
+      <input type="file" name="image">
+      <button type="submit">Generate Meal Plan</button>
+    </form>
+  </body>
+</html>
