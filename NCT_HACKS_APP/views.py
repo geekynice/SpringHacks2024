@@ -19,6 +19,12 @@ from groq import Groq
 def index(request):
     return render(request, 'index.html')
 
+def dashboard_view(request):
+    return render(request, 'dashboard.html')
+
+def meal_from_photo_view(request):
+    return render(request, 'meal_from_photo.html' )
+
 # Initialize Groq client
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
@@ -90,7 +96,7 @@ def parse_response(completion):
     return ai_response.strip(), ingredients, recipe_steps, instructions, health_benefits
 
 def MealSuggestionView(request):
-    csv_file_path = '/Users/nicebanjara/Desktop/Projects/quiz_ai/cleaned-data.csv'
+    csv_file_path = r'C:\Users\prajw\Downloads\NCT Hackathon - Spring 2024\SpringHacks2024\cleaned-data.csv'
     df = load_csv(csv_file_path)
 
     if request.method == 'POST':
@@ -215,7 +221,7 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('index')
+            return redirect('meal')
         else:
             messages.error(request, 'Invalid credentials')
 

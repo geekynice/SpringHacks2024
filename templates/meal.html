@@ -1,212 +1,389 @@
+
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meal Suggestion Generator</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        /* Custom styles */
-        body {
-            background-color: #f8f9fa;
-            font-family: 'Montserrat', sans-serif;
-        }
+  <head>
 
-        .card {
-            border: none;
-            border-radius: 15px;
-            margin-bottom: 20px;
-        }
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap');
 
-        .card-body {
-            padding: 2rem;
-        }
+  *{
+    font-family: Sora !important;
+  }
+</style>
 
-        h1, h2 {
-            font-weight: bold;
-            color: #333;
-        }
 
-        h1 {
-            font-size: 2.5rem;
-        }
 
-        h2 {
-            font-size: 2rem;
-        }
 
-        .form-group label,
-        .form-check-label {
-            font-weight: bold;
-            color: #555;
-        }
 
-        .form-control {
-            border-radius: 10px;
-            border: 1px solid #ddd;
-            padding: 10px;
-            font-size: 1rem;
-            transition: border-color 0.3s;
-        }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        .form-control:focus {
-            border-color: #80bdff;
-            box-shadow: 0 0 5px rgba(128, 189, 255, 0.5);
-        }
+<link rel="apple-touch-icon" sizes="76x76" href="{% static 'assets/img/apple-icon.png' %}">
+<link rel="icon" type="image/png" href="{% static 'assets/img/favicon.png' %}">
 
-        .form-check-input {
-            margin-top: 0.3rem;
-        }
+<title>
+  
+  Meal Suggestion Generator
+  
 
-        .btn-primary {
-            background-color: #007bff;
-            border-color: #007bff;
-            border-radius: 10px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            padding: 10px;
-            transition: background-color 0.3s, box-shadow 0.3s;
-        }
+  
 
-        .btn-primary:hover {
-            background-color: #0056b3;
-            box-shadow: 0 0 10px rgba(0, 91, 187, 0.5);
-        }
+  
+</title>
 
-        .btn-secondary {
-            background-color: #6c757d;
-            border-color: #6c757d;
-            border-radius: 10px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            padding: 10px;
-            transition: background-color 0.3s, box-shadow 0.3s;
-        }
 
-        .btn-secondary:hover {
-            background-color: #5a6268;
-            box-shadow: 0 0 10px rgba(90, 98, 104, 0.5);
-        }
 
-        /* Additional custom styles */
-        .mt-5 {
-            margin-top: 3rem !important;
-        }
+<!--     Fonts and icons     -->
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700" />
 
-        .mb-4 {
-            margin-bottom: 2rem !important;
-        }
+<!-- Nucleo Icons -->
+<link href="{% static 'assets/css/nucleo-icons.css'%}" rel="stylesheet" />
+<link href="{% static 'assets/css/nucleo-svg.css' %}" rel="stylesheet" />
 
-        .mt-4 {
-            margin-top: 2rem !important;
-        }
+<!-- Font Awesome Icons -->
+<script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
 
-        .mb-5 {
-            margin-bottom: 3rem !important;
-        }
-    </style>
-</head>
-<body>
-    <div class="container mt-5">
-        <div class="card shadow-lg">
-            <div class="card-body">
-                <h1 class="text-center mb-4">Meal Suggestion Generator</h1>
-                <form method="post">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label for="diet_option">Diet Option:</label>
-                        <select class="form-control" id="diet_option" name="diet_option">
-                            <option value="Vegan">Vegan</option>
-                            <option value="Non-veg">Non-veg</option>
-                            <option value="Veg">Veg</option>
-                            <option value="Gluten free">Gluten free</option>
-                        </select>
-                    </div>
-                    
-                    <fieldset class="form-group">
-                        <legend>Nut Allergic:</legend>
-                        <div class="form-check">
-                            <input type="radio" class="form-check-input" id="nut_allergic_true" name="nut_allergic" value="True">
-                            <label class="form-check-label" for="nut_allergic_true">True</label>
-                        </div>
-                        <div class="form-check">
-                            <input type="radio" class="form-check-input" id="nut_allergic_false" name="nut_allergic" value="False">
-                            <label class="form-check-label" for="nut_allergic_false">False</label>
-                        </div>
-                    </fieldset>
-                    
-                    <div class="form-group">
-                        <label for="goal">Goal:</label>
-                        <select class="form-control" id="goal" name="goal">
-                            <option value="lose_weight">Lose weight</option>
-                            <option value="gain_mass">Gain mass</option>
-                            <option value="maintain_weight">Maintain weight</option>
-                        </select>
-                    </div>
+<!-- Material Icons -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 
-                    <button type="submit" class="btn btn-primary btn-block">Generate Meal Suggestion</button>
-                </form>
-            </div>
-        </div>
+<!-- CSS Files -->
 
-        {% if meal_name %}
-        <div class="card shadow-lg mt-5">
-            <div class="card-body">
-                <h2 class="mb-4">Meal Details</h2>
-                <p><strong>Meal Name:</strong> {{ meal_name }}</p>
-                <p><strong>Calories:</strong> {{ calories }}</p>
-                <p><strong>Price:</strong> {{ price }}</p>
-            </div>
-        </div>
 
-        <div class="card shadow-lg mt-4">
-            <div class="card-body">
-                <h2 class="mb-4">Ingredients</h2>
-                <ul style="list-style: none; padding:0; line-height:2;">
-                    {% for ingredient in ingredients %}
-                        <li>{{ ingredient }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
 
-        <div class="card shadow-lg mt-4">
-            <div class="card-body">
-                <h2 class="mb-4">Recipe</h2>
-                <ol style="list-style: none; padding:0; line-height:2;">
-                    {% for step in recipe_steps %}
-                        <li>{{ step }}</li>
-                    {% endfor %}
-                </ol>
-            </div>
-        </div>
-        <div class="card shadow-lg mt-4">
-            <div class="card-body">
-                <h2 class="mb-4">Health Benefits</h2>
-                <ol style=" line-height:2;">
-                    {% for benefits in health_benefits %}
-                        <li>{{ benefits }}</li>
-                    {% endfor %}
-                </ol>
-            </div>
-        </div>
-        {% endif %}
+<link id="pagestyle" href="{% static 'assets/css/material-dashboard.css' %}" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-        {% if diet_option or nut_allergic or goal %}
-        <div class="card shadow-lg mt-4 mb-5">
-            <div class="card-body">
-                <h2 class="mb-4">Preferences Used</h2>
-                <p><strong>Diet Option:</strong> {{ diet_option }}</p>
-                <p><strong>Nut Allergic:</strong> {{ nut_allergic }}</p>
-                <p><strong>Goal:</strong> {{ goal }}</p>
-                <p><a href="" class="btn btn-secondary btn-block mt-4">Generate Another Meal Suggestion</a></p>
-            </div>
-        </div>
-        {% endif %}
+
+
+
+
+
+<!-- Nepcha Analytics (nepcha.com) -->
+<!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
+<script defer data-site="YOUR_DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script>
+
+
+  </head>
+
+
+  <body class="g-sidenav-show  bg-gray-100">
+    
+
+    
+
+    
+      <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 " style="background-color: #16b97a;" id="sidenav-main">
+
+  <div class="sidenav-header">
+    <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
+    <a class="navbar-brand m-0" href="#" target="_blank">
+      <img src="{% static 'images/logo-final.png' %}" style="transform: scale(1.5); border-top-right-radius: 5px; border-bottom-right-radius: 5px;" class="navbar-brand-img h-100" alt="main_logo">
+      <span class="ms-1 font-weight-bold text-white"></span>
+    </a>
+  </div>
+
+
+  <hr class="horizontal light mt-0 mb-2">
+
+  <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
+    <ul class="navbar-nav">
+      
+
+      
+        
+
+          
+
+          <style>
+            .link-active{
+              background-color: #f39728;
+            }
+          </style>
+  
+<li class="nav-item">
+  <a class="nav-link text-white " href="{% url 'dashboard' %}">
+    
+      <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+        <i class="fa fa-gauge"></i>
+      </div>
+    
+    <span class="nav-link-text ms-1"> Dashboard</span>
+  </a>
+</li>
+
+<li class="nav-item link-active">
+  <a class="nav-link text-white " href="{% url 'meal_suggestion' %}">
+    
+      <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+        <i class="fa fa-gauge"></i>
+      </div>
+    
+    <span class="nav-link-text ms-1 ">Meal Suggestion</span>
+  </a>
+</li>
+
+<li class="nav-item ">
+  <a class="nav-link text-white " href="{% url 'meal_from_photo' %}">
+    
+      <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+        <i class="fa fa-gauge"></i>
+      </div>
+    
+    <span class="nav-link-text ms-1 ">Meal from Photo</span>
+  </a>
+</li>
+
+  
+
+  
+  <div class="sidenav-footer position-absolute w-100 bottom-0 ">
+    <div class="mx-3">
+      
+      <a class="btn w-100" style="background-color: red; color: white;" href="https://www.creative-tim.com/product/material-dashboard-pro?ref=sidebarfree" type="button">Sign Out</a>
     </div>
+    
+  </div>
+  
+</aside>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
+
+
+      <main class="main-content border-radius-lg ">
+        
+        <section>
+          
+            <div class="container mt-5">
+              <div class="mb-4" style="display: flex; justify-content: space-between; align-items: center;"><h5>Hi, Prajwal</h5>
+              <img src="{% static 'images/user-icon.webp' %}"  style="height: 60px; width: 60px;object-fit: contain; border-radius: 50%; margin-right: 15px;" alt=""></div>
+              
+                <div class="card shadow-lg">
+                    <div class="card-body">
+                        <h1 class="text-center  mb-4" style="font-family: Sora; color: #16b97a; font-weight: bold; font-size: 2em;">Meal Suggestion Generator</h1>
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="m-3">
+                                <label for="diet_option">Diet Option:</label>
+                                <select style="padding: 5px;" class="form-select" id="diet_option" name="diet_option">
+                                  
+                                    <option  value="Vegan"> Vegan</option>
+                                    <option value="Non-veg">Non-veg</option>
+                                    <option value="Veg">Veg</option>
+                                    <option value="Gluten free">Gluten free</option>
+                                </select>
+                            </div>
+                            
+                            <fieldset class="form-group m-3">
+                                <label for="nut-allergic-true">Nut Allergic :</label>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" id="nut_allergic_true" name="nut_allergic" value="True">
+                                    <label class="form-check-label" for="nut_allergic_true">True</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" id="nut_allergic_false" name="nut_allergic" value="False">
+                                    <label class="form-check-label" for="nut_allergic_false">False</label>
+                                </div>
+                            </fieldset>
+                            
+                            <div class="form-group m-3">
+                                <label for="goal">Goal:</label>
+                                <select style="padding: 5px;" class="form-select" id="goal" name="goal">
+                                    <option value="lose_weight">Lose weight</option>
+                                    <option value="gain_mass">Gain mass</option>
+                                    <option value="maintain_weight">Maintain weight</option>
+                                </select>
+                            </div>
+        
+                            <button type="submit" style="background-color: #f39728; color: white;" class="btn btn-block mt-5">Generate Meal Suggestion</button>
+                        </form>
+                    </div>
+                </div>
+        
+                {% if meal_name %}
+                <div class="card shadow-lg mt-5">
+                    <div class="card-body">
+                        <h4 class="mb-4" style="color: #16b97a;">Meal Details</h4>
+                        <p><strong>Meal Name:</strong> {{ meal_name }}</p>
+                        <p><strong>Calories:</strong> {{ calories }}</p>
+                        <p><strong>Price:</strong> {{ price }}</p>
+                    </div>
+                </div>
+        
+                <div class="card shadow-lg mt-4">
+                    <div class="card-body">
+                        <h4 class="mb-4" style="color: #16b97a;">Ingredients</h4>
+                        <ul style="list-style: none; padding:0; line-height:2;">
+                            {% for ingredient in ingredients %}
+                                <li>{{ ingredient }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+        
+                <div class="card shadow-lg mt-4">
+                    <div class="card-body">
+                        <h4 class="mb-4" style="color: #16b97a;">Recipe</h4>
+                        <ol style="list-style: none; padding:0; line-height:2;">
+                            {% for step in recipe_steps %}
+                                <li>{{ step }}</li>
+                            {% endfor %}
+                        </ol>
+                    </div>
+                </div>
+                <div class="card shadow-lg mt-4">
+                    <div class="card-body">
+                        <h4 class="mb-4" style="color: #16b97a;">Health Benefits</h4>
+                        <ol style=" line-height:2;">
+                            {% for benefits in health_benefits %}
+                                <li>{{ benefits }}</li>
+                            {% endfor %}
+                        </ol>
+                    </div>
+                </div>
+                {% endif %}
+        
+                {% if diet_option or nut_allergic or goal %}
+                <div class="card shadow-lg mt-4 mb-5">
+                    <div class="card-body">
+                        <h4 class="mb-4" style="color: #16b97a;">Preferences Used</h4>
+                        <p><strong>Diet Option:</strong> {{ diet_option }}</p>
+                        <p><strong>Nut Allergic:</strong> {{ nut_allergic }}</p>
+                        <p><strong>Goal:</strong> {{ goal }}</p>
+                        
+                    </div>
+                    
+                </div>
+                <p><a href="" class="btn btn-secondary btn-block mt-4">Generate Another Meal Suggestion</a></p>
+                {% endif %}
+                
+            </div>
+        
+            <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+            </section>
+</main>
+    
+
+      
+          <div class="fixed-plugin" style="background-color: #f39728;">
+    <a class="fixed-plugin-button text-dark position-fixed px-3 py-2"  style="background-color: #f39728;">
+      <i class="fa fa-message"></i>
+    </a>
+    
+
+      
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--   Core JS Files   -->
+<script src="./assets/js/core/popper.min.js" ></script>
+<script src="./assets/js/core/bootstrap.min.js" ></script>
+<script src="./assets/js/plugins/perfect-scrollbar.min.js" ></script>
+<script src="./assets/js/plugins/smooth-scrollbar.min.js" ></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+  var win = navigator.platform.indexOf('Win') > -1;
+  if (win && document.querySelector('#sidenav-scrollbar')) {
+    var options = {
+      damping: '0.5'
+    }
+    Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+  }
+</script>
+
+<!-- Github buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+
+<!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc --><script src="./assets/js/material-dashboard.min.js?v=3.1.0"></script>
+  </body>
+
 </html>
