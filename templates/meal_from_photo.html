@@ -10,15 +10,17 @@
             style="height: 60px; width: 60px;object-fit: contain; border-radius: 50%; margin-right: 15px;" alt="">
         </div>
 
-        <div class="card shadow-lg">
+        <div class="card shadow-lg" style="overflow: auto;">
           <div class="card-body">
             <h1 class="text-center  mb-4" style="font-family: Sora; color: #16b97a; font-weight: bold; font-size: 2em;">
               Generate Meal from Photo</h1>
               <form method="post" enctype="multipart/form-data" action="{% url 'meal_from_photo' %}">
                 {% csrf_token %}
-                <input type="file" name="image">
-                <button type="submit" class="btn w-100" style="background-color: red; color: white;"  type="button">Generate Meal Plan</button>
-              </form>
+                <input type="file" name="image" id="imageInput" accept="image/*" onchange="previewImage(event)">
+                <img id="imagePreview" style="display: none; max-width: 100%; margin-top: 20px;">
+                <button type="submit" class="btn w-100 mt-4" style="background-color: red; color: white;">Generate Meal Plan</button>
+            </form>
+            
               {{ response | safe }}
           </div>
 
@@ -27,3 +29,26 @@
     </section>
   </main>
 {% endblock content %}
+
+{% block script %}
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+            var tables = document.querySelectorAll('table');
+            tables.forEach(function(table) {
+              table.classList.add('table');
+                table.classList.add('table-striped');
+            });
+        });
+  function previewImage(event) {
+        var input = event.target;
+        var reader = new FileReader();
+        reader.onload = function(){
+            var imagePreview = document.getElementById('imagePreview');
+            imagePreview.src = reader.result;
+            imagePreview.style.display = 'block';
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+
+</script>
+{% endblock script %}

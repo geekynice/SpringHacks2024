@@ -1,72 +1,90 @@
-{% extends 'base.html' %}
+{% extends 'base2.html' %}
 {% load static %}
 
 
 {% block content %}
 <title>Nourish - Registration</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap');
 
-@import url('https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap');
-  *{
+  * {
     font-family: Sora;
   }
-    /* Style for the label */
-    .upload-label {
-        display: block;
-        font-weight: bold;
-        margin-bottom: 10px;
-    }
 
-    /* Hide the file input */
-    .file-input {
-        display: none;
-    }
+  /* Style for the label */
+  .upload-label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
 
-    /* Style for the avatar logo */
-    .avatar {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        background-color: #ccc;
-        margin-bottom: 10px;
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-    }
+  /* Hide the file input */
+  .file-input {
+    display: none;
+  }
 
-    /* Style for the image inside the avatar */
-    .avatar img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
+  /* Style for the avatar logo */
+  .avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: #ccc;
+    margin-bottom: 10px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
 
-    /* Style for the custom upload button */
-    .custom-upload-button {
-        display: inline-block;
-        padding: 5px 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        background-color: #007bff;
-        color: white;
-        cursor: pointer;
-    }
+  /* Style for the image inside the avatar */
+  .avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Style for the custom upload button */
+  .custom-upload-button {
+    display: inline-block;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+  }
+
+
+  input {
+    border: 1px solid #f39728 !important;
+    padding-left: 20px !important;
+  }
+
+  label {
+    padding: 10px !important;
+  }
 </style>
-<section style="background: linear-gradient(to bottom right, #16b97a, #16b97a);" class=" py-3 py-md-5 py-xl-8 mb-5">
-  <div class="container mb-5" style="border-radius: 30px; ;">
+<section style="background: linear-gradient(to bottom right, #16b97a, #16b97a);" class=" py-5">
+  <div class="container mb-5" style="border-radius: 30px ;">
     <div class="row gy-4 align-items-center">
-      <div style="background-color: #ffffff; transform: translateY(-200px); border-radius: 30px;" class="col-12 col-md-6 col-xl-7">
-        <div style="background-color: #ffffff !important; border-radius: 30px; " class="d-flex justify-content-center text-bg-primary">
+      <div style="background-color: #ffffff; transform: translateY(-200px); border-radius: 30px;"
+        class="col-12 col-md-6 col-xl-7">
+        <div style="background-color: #ffffff !important; border-radius: 30px; "
+          class="d-flex justify-content-center text-bg-primary">
           <div style="background-color: #ffffff; border-radius: 30px;" class="col-12 col-xl-9">
-            <img class="img-fluid rounded mb-4" loading="lazy" src="{% static 'images/logo-final.png'%}" width="245" height="80" alt="BootstrapBrain Logo">
+            <img class="img-fluid rounded mb-4" loading="lazy" src="{% static 'images/logo-final.png'%}" width="245"
+              height="80" alt="BootstrapBrain Logo">
             <hr class="border-primary-subtle mb-4">
-            <h2 class="h1 mb-4" style="font-weight: bold; color: #f39728;">Achieve your health goals with our advanced technology</h2>
-            <p class="lead mb-5" style="color: #000000;">Experience tailored nutrition plans, customized fitness routines, and stress management tools designed to help you thrive.</p>
+            <h2 class="h1 mb-4" style="font-weight: bold; color: #f39728;">Achieve your health goals with our advanced
+              technology</h2>
+            <p class="lead mb-5" style="color: #000000;">Experience tailored nutrition plans, customized fitness
+              routines, and stress management tools designed to help you thrive.</p>
             <div class="text-endx">
-              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-grip-horizontal" viewBox="0 0 16 16">
-                <path d="M2 8a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm0-3a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm3 3a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm0-3a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm3 3a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm0-3a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm3 3a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm0-3a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm3 3a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm0-3a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor"
+                class="bi bi-grip-horizontal" viewBox="0 0 16 16">
+                <path
+                  d="M2 8a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm0-3a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm3 3a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm0-3a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm3 3a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm0-3a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm3 3a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm0-3a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm3 3a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm0-3a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
               </svg>
             </div>
           </div>
@@ -84,86 +102,87 @@
               </div>
             </div>
             <form method="POST" action="{% url 'signup' %}" enctype="multipart/form-data">
-                {% csrf_token %}
+              {% csrf_token %}
               <div class="row gy-3 overflow-hidden">
-                <div>
-                    <!-- Avatar logo -->
-                    <div class="avatar" id="avatar" style="cursor: pointer; margin: auto;" onclick="document.getElementById('profile_photo').click();">
-                        <img id="avatarImage" src=""  alt="Avatar" style="display: none;">
-                    </div>
-                    <!-- Label for the file input -->
-                    
-                    <!-- Hidden file input -->
-                    <input type="file" name="profile_photo" id="profile_photo" class="file-input" accept="image/*">
-                    <!-- Custom upload button -->
-                    
-                </div>
-                <div class="col-12">
-                  <div class="form-floating mb-3">
-                    <input type="text" class="form-control" name="first_name" id="first_name" placeholder="First Name" required>
-                    <label for="firstName" class="form-label">First Name</label>
+                <div class="col-md-12">
+                  <!-- Avatar logo -->
+                  <div class="avatar" id="avatar" style="cursor: pointer; margin: auto;"
+                    onclick="document.getElementById('profile_photo').click();">
+                    <img id="avatarImage" src="" alt="Avatar" style="display: none;">
                   </div>
+                  <!-- Hidden file input -->
+                  <input type="file" name="profile_photo" id="profile_photo" class="file-input" accept="image/*">
                 </div>
-                <div class="col-12">
+                <div class="col-md-12">
                   <div class="form-floating mb-3">
-                    <input type="text" class="form-control" name="last_name" id="lastName" placeholder="First Name" required>
+                    <input type="text" class="form-control" name="first_name" id="first_name" placeholder="First Name"
+                      required>
+                    <label for="first_name" class="form-label">First Name</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <input type="text" class="form-control" name="last_name" id="lastName" placeholder="Last Name"
+                      required>
                     <label for="lastName" class="form-label">Last Name</label>
                   </div>
-                </div>
-                <div class="col-12">
                   <div class="form-floating mb-3">
-                    <input type="text" class="form-control" name="username" id="username" placeholder="@username" required>
+                    <input type="text" class="form-control" name="username" id="username" placeholder="@username"
+                      required>
                     <label for="username" class="form-label">Username</label>
                   </div>
-                </div>
-                <div class="col-12">
-                    <div class="form-floating mb-3">
-                      <input type="text" class="form-control" name="email" id="email" placeholder="name@example.com" required>
-                      <label for="email" class="form-label">Email</label>
-                    </div>
-                  </div>
-                  <div class="col-12">
-                    <div class="form-floating mb-3">
-                      <input type="date" class="form-control" name="date_of_birth" id="date_of_birth" placeholder="MM/dd/YYYY" required>
-                      <label for="date_of_birth" class="form-label">Date of Birth:</label>
-                    </div>
-                  </div>
-                <div class="col-12">
                   <div class="form-floating mb-3">
-                    <input type="password" class="form-control" name="password" id="password" value="" placeholder="Password" required>
+                    <input type="email" class="form-control" name="email" id="email" placeholder="name@example.com"
+                      required>
+                    <label for="email" class="form-label">Email</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <input type="number" class="form-control" name="height" id="height" placeholder="Height (cm)"
+                      required>
+                    <label for="height" class="form-label">Height (cm)</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <input type="number" class="form-control" name="weight" id="weight" placeholder="Weight (kg)"
+                      required>
+                    <label for="weight" class="form-label">Weight (kg)</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <input type="date" class="form-control" name="date_of_birth" id="date_of_birth"
+                      placeholder="MM/dd/YYYY" required>
+                    <label for="date_of_birth" class="form-label">Date of Birth</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <input type="password" class="form-control" name="password" id="password" value=""
+                      placeholder="Password" required>
                     <label for="password" class="form-label">Password</label>
                   </div>
-                </div>
-                <div class="col-12">
-                    <div class="form-floating mb-3">
-                      <input type="password" class="form-control" name="confirm_password" id="confirm_password" value="" placeholder=" Confirm Password" required>
-                      <label for="password" class="form-label">Confirm Password</label>
-                    </div>
+                  <div class="form-floating mb-3">
+                    <input type="password" class="form-control" name="confirm_password" id="confirm_password" value=""
+                      placeholder="Confirm Password" required>
+                    <label for="password" class="form-label">Confirm Password</label>
                   </div>
-                <div class="col-12">
                   <div class="form-check">
                     <input class="form-check-input" type="checkbox" value="" name="iAgree" id="iAgree" required>
                     <label class="form-check-label text-secondary" for="iAgree">
                       I agree to the <a href="#!" class="link-primary text-decoration-none">terms and conditions</a>
                     </label>
                   </div>
-                </div>
-                <div class="col-12">
                   <div class="d-grid">
-                    <button class="btn btn-primary btn-lg" type="submit">Sign up</button>
+                    <button class="btn btn-lg" style="background-color: #f39728; color: white;" type="submit">Sign
+                      up</button>
                   </div>
                 </div>
               </div>
             </form>
+
             <div class="row">
               <div class="col-12">
                 <div class="d-flex gap-2 gap-md-4 flex-column flex-md-row justify-content-md-end mt-4">
-                  <p class="m-0 text-secondary text-center">Already have an account? <a href="{% url 'login' %}" class="link-primary text-decoration-none">Sign in</a></p>
+                  <p class="m-0 text-secondary text-center">Already have an account? <a href="{% url 'login' %}"
+                      class="link-primary text-decoration-none">Sign in</a></p>
                 </div>
               </div>
             </div>
             <div class="row">
-              
+
             </div>
           </div>
         </div>
@@ -173,17 +192,59 @@
 </section>
 
 <script>
-        document.getElementById('profile_photo').addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const avatarImage = document.getElementById('avatarImage');
-                    avatarImage.src = e.target.result;
-                    avatarImage.style.display = 'block';
-                }
-                reader.readAsDataURL(file);
-            }
-        });
-    </script>
+  document.getElementById('profile_photo').addEventListener('change', function (event) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const avatarImage = document.getElementById('avatarImage');
+        avatarImage.src = e.target.result;
+        avatarImage.style.display = 'block';
+      }
+      reader.readAsDataURL(file);
+    }
+  });
+
+</script>
+<script>
+  function validateForm(event) {
+    const dateOfBirth = document.getElementById('date_of_birth');
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirm_password');
+
+    // Date of Birth validation
+    const today = new Date().toISOString().split('T')[0];
+    if (dateOfBirth.value > today) {
+      alert("Date of birth cannot be in the future.");
+      dateOfBirth.focus();
+      event.preventDefault();
+      return false;
+    }
+
+    // Password strength validation
+    const passwordValue = password.value;
+    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+    if (!passwordPattern.test(passwordValue)) {
+      alert("Password must be at least 8 characters long, and include at least one uppercase letter, one lowercase letter, one number, and one special character.");
+      password.focus();
+      event.preventDefault();
+      return false;
+    }
+
+    // Confirm Password validation
+    if (passwordValue !== confirmPassword.value) {
+      alert("Passwords do not match.");
+      confirmPassword.focus();
+      event.preventDefault();
+      return false;
+    }
+
+    return true;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelector('form').addEventListener('submit', validateForm);
+  });
+</script>
 {% endblock content %}

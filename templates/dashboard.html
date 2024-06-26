@@ -7,19 +7,19 @@
   <section>
     <div class="container mt-5">
       <div class="mb-4" style="display: flex; justify-content: space-between; align-items: center;">
-        <h5>Hi, Prajwal</h5>
+        <h5>Hi, {{request.user.first_name}}</h5>
         <img src="{% static 'images/user-icon.webp' %}"
           style="height: 60px; width: 60px;object-fit: contain; border-radius: 50%; margin-right: 15px;" alt="">
       </div>
 
       <div class="card shadow-lg">
         <div class="card-body">
-          <p class="" style="font-family: Sora; color: #16b97a; font-weight: bold; font-size: 2em;">
+          <p class="mb-0" style="font-family: Sora; color: #16b97a; font-weight: bold; font-size: 1.3em; ">
             These are the recommended meals according to your preferences and BMI</h1>
           
         </div>
       </div>
-      <div style="display: flex; justify-content: space-between ;padding-top:2em; gap:2em;">
+      <div style="display: flex ;padding-top:2em; gap:2em;">
         <div class="card" style="display: block;">
           <div class="card-body">
             <div>
@@ -54,8 +54,9 @@
           </div>
           <p><a href="" class="btn btn-secondary btn-block mt-4">Generate Another Meal Suggestion</a></p>
       {% endif %}
-      <canvas id="caloriesChart" width="200" height="200"></canvas>
-      <canvas id="priceChart" width="200" height="200"></canvas>
+      <div class="chart-container" style="width: 50%;">
+        <canvas id="caloriesChart" width="200" height="200"></canvas>
+      </div>
     </div>
   </section>
 </main>

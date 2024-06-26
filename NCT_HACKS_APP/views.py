@@ -60,7 +60,7 @@ def parse_response_recommendation(completion):
 
 
 
-
+@login_required
 def dashboard_view(request):
     try:
         user_model_instance = UserModel.objects.get(user=request.user)
@@ -296,6 +296,9 @@ def MealSuggestionView(request):
 User = get_user_model()
 
 def signup_view(request):
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+    
     if request.method == 'POST':
         first_name = request.POST['first_name']
         last_name = request.POST['last_name']
@@ -324,7 +327,11 @@ def signup_view(request):
 
     return render(request, 'signup.html')
 
+
 def login_view(request):
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+    
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -337,6 +344,7 @@ def login_view(request):
             messages.error(request, 'Invalid credentials')
 
     return render(request, 'login.html')
+
 
 @login_required
 def preferences_view(request):
@@ -360,7 +368,7 @@ def preferences_view(request):
 
         custom_user.preference = f"Diet Option:{diet_option}, Nut Allergy:{nut_allergic}, Goal:{goal}, height:{height}cm, weight:{weight}kg"
         custom_user.save()
-        return redirect('index')  # Redirect to a home page or another appropriate page
+        return redirect('dashboard')  # Redirect to a home page or another appropriate page
 
     return render(request, 'preferences.html')
 
@@ -453,3 +461,5 @@ async def chatbot_view(request):
     
 def chat_page(request):
     return render(request, 'chat.html')
+
+

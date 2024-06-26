@@ -6,7 +6,7 @@
   <section>
     
       <div class="container mt-5">
-        <div class="mb-4" style="display: flex; justify-content: space-between; align-items: center;"><h5>Hi, Prajwal</h5>
+        <div class="mb-4" style="display: flex; justify-content: space-between; align-items: center;"><h5>Hi, {{request.user.first_name}}</h5>
         <img src="{% static 'images/user-icon.webp' %}"  style="height: 60px; width: 60px;object-fit: contain; border-radius: 50%; margin-right: 15px;" alt=""></div>
         
           <div class="card shadow-lg">
@@ -61,16 +61,7 @@
               </div>
           </div>
   
-          <div class="card shadow-lg mt-4">
-              <div class="card-body">
-                  <h4 class="mb-4" style="color: #16b97a;">Ingredients</h4>
-                  <ul style="list-style: none; padding:0; line-height:2;">
-                      {% for ingredient in ingredients %}
-                          <li>{{ ingredient }}</li>
-                      {% endfor %}
-                  </ul>
-              </div>
-          </div>
+          
   
           <div class="card shadow-lg mt-4">
               <div class="card-body">

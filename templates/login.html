@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base2.html' %}
 {% load static %}
 
 
@@ -10,9 +10,11 @@
     font-family: Sora;
   }
 </style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.min.js" integrity="sha512-ykZ1QQr0Jy/4ZkvKuqWn4iF3lqPZyij9iRv6sGqLRdTPkY69YX6+7wvVGmsdBbiIfN/8OdsI7HABjvEok6ZopQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <section style="background: linear-gradient(to bottom right, #16b97a, #16b97a);"  class=" py-3 py-md-5 py-xl-8" style="
     padding-top: 9em !important;">
-  <div class="container" style="height: 100vh !important;">
+  <div class="container" style="height: 75vh !important;">
     <div class="row gy-4 align-items-center">
       <div class="col-12 col-md-6 col-xl-7" style="background-color: #ffffff !important; border-radius: 30px; ">
         <div class="d-flex justify-content-center text-bg-primary" style="background-color: #ffffff !important; border-radius: 30px; ">
@@ -45,14 +47,14 @@
               <div class="row gy-3 overflow-hidden">
                 <div class="col-12">
                   <div class="form-floating mb-3">
-                    <input type="text" class="form-control" name="username" id="username" placeholder="@username" required>
-                    <label for="email" class="form-label">Username</label>
+                    <input type="text" class="form-control" name="username" id="username" placeholder="@username" required style="border: 1px solid #f39728; padding-left: 20px; ">
+                    <label for="email" class="form-label" style="padding: 10px;">Username</label>
                   </div>
                 </div>
                 <div class="col-12">
                   <div class="form-floating mb-3">
-                    <input type="password" class="form-control" name="password" id="password" value="" placeholder="Password" required>
-                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" name="password" id="password" value="" placeholder="Password" required style="border: 1px solid #f39728; padding-left: 20px; " >
+                    <label for="password" class="form-label" style="padding: 10px;">Password</label>
                   </div>
                 </div>
                 
@@ -61,7 +63,7 @@
                 </div>
                 <div class="col-12">
                   <div class="d-grid">
-                    <button class="btn btn-primary btn-lg" type="submit">Log In</button>
+                    <button class="btn btn-lg" style="background-color: #16b97a; color: white;" type="submit">Log In</button>
                   </div>
                 </div>
               </div>
