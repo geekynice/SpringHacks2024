@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
 import os
 import pandas as pd
+from django.shortcuts import render, get_object_or_404
 from django.shortcuts import render
 from django.views import View
 from django.http import HttpResponse
@@ -29,13 +30,80 @@ import re
 genai.configure(api_key=os.environ['GEMINI_API_KEY'])
 model = genai.GenerativeModel('gemini-1.5-flash')
 from django.http import HttpResponseRedirect, HttpResponseServerError
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 def index(request):
     return render(request, 'index.html')
 
-@login_required
+def parse_response_recommendation(completion):
+    meal_name = ""
+    calories = ""
+    price = ""
+    ai_response = ""
+
+    for chunk in completion:
+        ai_response += chunk.choices[0].delta.content or ""
+
+    # Split by lines
+    lines = ai_response.split("\n")
+
+    for line in lines:
+        if line.startswith("**Meal Name:**"):
+            meal_name = line.replace("**Meal Name:**", "").strip('*').strip()
+        elif line.startswith("**Calories:**"):
+            calories = line.replace("**Calories:**", "").strip('*').strip()
+        elif line.startswith("**Price:**"):
+            price = line.replace("**Price:**", "").strip('*').strip()
+    print(meal_name)
+    return meal_name, calories, price
+
+
+
+
+
 def dashboard_view(request):
-    return render(request, 'dashboard.html')
+    try:
+        user_model_instance = UserModel.objects.get(user=request.user)
+        user_preferences = user_model_instance.preference
+
+        prompt1 = f"Generate first meal1 suggestion with the following details that includes Meal Name, Calories & Price:\n"
+        prompt1 += f"Based on the available dataset and your preferences and height and weight:\n"
+        prompt1 += f"Preferences and Body info: {user_preferences}\n"
+        prompt1 += "Both should be different"
+        
+        prompt2 = f"Generate second meal2 suggestion with the following details that includes Meal Name, Calories & Price:\n"
+        prompt2 += f"Based on the available dataset and your preferences and height and weight:\n"
+        prompt2 += f"Preferences and Body info: {user_preferences}\n"
+
+        prompt2 += "Both should be different"
+
+        # Query the model for both meal suggestions
+        completion1 = query_model(prompt1)
+        completion2 = query_model(prompt2)
+
+        # Parse model response to get the meal recommendation details
+        meal_name, calories, price = parse_response_recommendation(completion1)
+        meal_name2, calories2, price2 = parse_response_recommendation(completion2)
+
+        # Prepare context for rendering template
+        context = {
+            'meal_name': meal_name,
+            'calories': calories,
+            'price': price, # Assuming this is already in HTML format
+            'meal_name2': meal_name2,
+            'calories2': calories2,
+            'price2': price2,
+            'user_preferences': user_preferences,
+        }
+
+    except UserModel.DoesNotExist:
+        # Handle case where UserModel does not exist for the user
+        context = {
+            'error_message': "User preferences not found."
+        }
+
+    return render(request, 'dashboard.html', context)
+
 
 @login_required
 def meal_from_photo_view(request):
@@ -53,7 +121,7 @@ def meal_from_photo_view(request):
             image_data = pathlib.Path(file_path).read_bytes()
 
             # Define prompt and generate content
-            prompt = "Generate 3 healthy meal from the items in fridge and show calories, instruction, ingridients & health benefits, AND ALWAYS GIVE THE RESPONSE IN SAME STRUCTURE in html table format"
+            prompt = "Generate 3 healthy meal from the items in fridge and show calories, instruction, ingridients & health benefits, AND ALWAYS GIVE THE RESPONSE IN SAME STRUCTURE in html <table></table> format"
             response = model.generate_content([prompt, {'mime_type': 'image/jpeg', 'data': image_data}])
 
             # Return raw JSON response
@@ -68,7 +136,6 @@ def meal_from_photo_view(request):
     return render(request, 'meal_from_photo.html')
 
 # Initialize Groq client
-client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 # Function to load CSV data
 def load_csv(file_path):
@@ -91,6 +158,7 @@ def query_model(prompt):
         stream=True,
         stop=None,
     )
+    print("Completion: ",completion)
     return completion
 
 def parse_response(completion):
@@ -278,7 +346,7 @@ def preferences_view(request):
         goal = request.POST.get('goal')
 
         # Ensure the logged-in user has a CustomUser instance
-        custom_user = UserModel.objects.get(user=request.user)
+        custom_user = UserModel.objects.get(user=request.user.id)
 
         # Save preferences for the user
         Preferences.objects.create(
@@ -287,7 +355,11 @@ def preferences_view(request):
             nut_allergic=nut_allergic,
             goal=goal
         )
+        height = custom_user.height
+        weight = custom_user.weight
 
+        custom_user.preference = f"Diet Option:{diet_option}, Nut Allergy:{nut_allergic}, Goal:{goal}, height:{height}cm, weight:{weight}kg"
+        custom_user.save()
         return redirect('index')  # Redirect to a home page or another appropriate page
 
     return render(request, 'preferences.html')
@@ -296,3 +368,88 @@ def preferences_view(request):
 def logout_view(request):
     logout(request)
     return redirect('login')
+
+
+
+
+
+
+
+
+
+from django.views.decorators.csrf import csrf_exempt
+import json
+
+import asyncio
+import asyncio
+
+async def query_model_chat(prompt):
+    messages = [{
+        "role": "user",
+        "content": prompt
+    }]
+    
+    print("Querying model with prompt:")
+    print(prompt)
+    
+    try:
+        completion = await client.chat.completions.create(
+            model="llama3-70b-8192",
+            messages=messages,
+            temperature=1,
+            max_tokens=1024,
+            top_p=1,
+            stream=True,
+            stop=None,
+        )
+        
+        response_text = ''
+        
+        async for chunk in completion:
+            if hasattr(chunk, 'choices') and len(chunk.choices) > 0:
+                for choice in chunk.choices:
+                    if hasattr(choice, 'text'):
+                        response_text += choice.text
+        
+        response_text = response_text.strip()
+        
+        print("Response text:")
+        print(response_text)  # Print the final response text for debugging
+        
+        return response_text  # Return the response text
+    
+    except Exception as e:
+        print(f"Error querying model: {str(e)}")
+        return ""  # Return empty string in case of any errors
+
+# Example usage in a script or module
+async def main():
+    prompt = "Who is the world's richest person?"
+    response_text = await query_model_chat(prompt)
+    print("Final Response:", response_text)
+
+if __name__ == "__main__":
+    asyncio.run(main())
+
+@csrf_exempt
+async def chatbot_view(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            prompt = data.get('prompt', '')
+            
+            # Call the asynchronous function directly
+            response_text = await query_model_chat(prompt)
+            
+            # Print the response for debugging purposes
+            print("Final Response:", response_text)
+            
+            return JsonResponse({'response': response_text})
+        
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    
+    return JsonResponse({'error': 'Invalid request method.'}, status=400)
+    
+def chat_page(request):
+    return render(request, 'chat.html')

@@ -162,6 +162,8 @@
 <script src="./assets/js/core/bootstrap.min.js" ></script>
 <script src="./assets/js/plugins/perfect-scrollbar.min.js" ></script>
 <script src="./assets/js/plugins/smooth-scrollbar.min.js" ></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 
 
 
@@ -250,7 +252,18 @@
 <!-- Github buttons -->
 <script async defer src="https://buttons.github.io/buttons.js"></script>
 
+<script src="{% static 'node_modules/axe-core/axe.min.js' %}"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    axe.run(document, {}, function (err, results) {
+      if (err) throw err;
+      console.log(results);
+    });
+  });
+</script>
+{% block script %}
 
+{% endblock script %}
 <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc --><script src="./assets/js/material-dashboard.min.js?v=3.1.0"></script>
   </body>
 

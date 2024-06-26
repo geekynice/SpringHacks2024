@@ -8,6 +8,7 @@ class UserModel(models.Model):
     profile_photo = models.ImageField(upload_to='static/profile/', blank=True, null=True)
     weight = models.FloatField() 
     height = models.FloatField()  
+    preference = models.TextField(max_length=500, null=True, default='')
     REQUIRED_FIELDS = ['date_of_birth', 'email']
 
     def __str__(self):
@@ -47,3 +48,4 @@ class Meal(models.Model):
 
     def __str__(self):
         return f"{self.user.username}'s Meal: {self.name}"
+    

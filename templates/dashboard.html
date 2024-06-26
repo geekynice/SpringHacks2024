@@ -14,12 +14,117 @@
 
       <div class="card shadow-lg">
         <div class="card-body">
-          <h1 class="text-center  mb-4" style="font-family: Sora; color: #16b97a; font-weight: bold; font-size: 2em;">
-            This is Dashboard</h1>
+          <p class="" style="font-family: Sora; color: #16b97a; font-weight: bold; font-size: 2em;">
+            These are the recommended meals according to your preferences and BMI</h1>
+          
         </div>
       </div>
+      <div style="display: flex; justify-content: space-between ;padding-top:2em; gap:2em;">
+        <div class="card" style="display: block;">
+          <div class="card-body">
+            <div>
+              <h2>Recommended Meal</h2>
+              <p><strong>Meal Name:</strong> {{ meal_name }}</p>
+              <p><strong>Meal Calories:</strong> {{ calories }}</p>
+              <p><strong>Meal Price:</strong> {{ price }}</p>
+          </div>
+          </div>
+        </div>
+        <div class="card" style="display: block;">
+          <div class="card-body">
+            <div>
+              <h2>Recommended Meal</h2>
+              <p><strong>Meal Name:</strong> {{ meal_name2 }}</p>
+              <p><strong>Meal Calories:</strong> {{ calories2 }}</p>
+              <p><strong>Meal Price:</strong> {{ price2 }}</p>
+          </div>
+          </div>
+        </div>
+      </div>
+      {% if diet_option or nut_allergic or goal %}
+          <div class="card shadow-lg mt-4 mb-5">
+              <div class="card-body">
+                  <h4 class="mb-4" style="color: #16b97a;">Preferences Used</h4>
+                  <p><strong>Diet Option:</strong> {{ diet_option }}</p>
+                  <p><strong>Nut Allergic:</strong> {{ nut_allergic }}</p>
+                  <p><strong>Goal:</strong> {{ goal }}</p>
+                  
+              </div>
+              
+          </div>
+          <p><a href="" class="btn btn-secondary btn-block mt-4">Generate Another Meal Suggestion</a></p>
+      {% endif %}
+      <canvas id="caloriesChart" width="200" height="200"></canvas>
+      <canvas id="priceChart" width="200" height="200"></canvas>
     </div>
   </section>
 </main>
 
 {% endblock content %}
+
+{% block script %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      var ctx = document.getElementById('caloriesChart').getContext('2d');
+
+      var chart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+              labels: ['{{ meal_name }}', '{{ meal_name2 }}'],  // Meal names from Django context
+              datasets: [{
+                  label: 'Calories',
+                  data: [{{ calories | safe }}, {{ calories2 | safe }}],  // Calorie data from Django context
+                  backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                  borderColor: 'rgba(75, 192, 192, 1)',
+                  borderWidth: 1
+              }]
+          },
+          options: {
+              scales: {
+                  y: {
+                      beginAtZero: true
+                  }
+              }
+          }
+      });
+  });
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var ctx = document.getElementById('priceChart').getContext('2d');
+
+        var chart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['{{ meal_name }}', '{{ meal_name2 }}'],  // Meal names from Django context
+                datasets: [{
+                    label: 'Price',
+                    data: [{{ price | safe }}, {{ price2 }}],  // Price data from Django context
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.8)',  // Red color for Meal 1
+                        'rgba(54, 162, 235, 0.8)',  // Blue color for Meal 2
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            // Get the numeric value without the dollar sign
+                            var price = tooltipItem.raw.toFixed(2);  // Assuming two decimal places
+                            return price;
+                        }
+                    }
+                }
+                }
+            }
+        });
+    });
+  </script>
+{% endblock script %}

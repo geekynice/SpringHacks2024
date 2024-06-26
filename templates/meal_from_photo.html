@@ -5,7 +5,7 @@
     <section>
       <div class="container mt-5">
         <div class="mb-4" style="display: flex; justify-content: space-between; align-items: center;">
-          <h5>Hi, Prajwal</h5>
+          <h5>Hi, {{request.user.first_name}}</h5>
           <img src="{% static 'images/user-icon.webp' %}"
             style="height: 60px; width: 60px;object-fit: contain; border-radius: 50%; margin-right: 15px;" alt="">
         </div>
@@ -14,14 +14,15 @@
           <div class="card-body">
             <h1 class="text-center  mb-4" style="font-family: Sora; color: #16b97a; font-weight: bold; font-size: 2em;">
               Generate Meal from Photo</h1>
+              <form method="post" enctype="multipart/form-data" action="{% url 'meal_from_photo' %}">
+                {% csrf_token %}
+                <input type="file" name="image">
+                <button type="submit" class="btn w-100" style="background-color: red; color: white;"  type="button">Generate Meal Plan</button>
+              </form>
+              {{ response | safe }}
           </div>
+
         </div>
-        <form method="post" enctype="multipart/form-data" action="{% url 'meal_from_photo' %}">
-          {% csrf_token %}
-          <input type="file" name="image">
-          <button type="submit">Generate Meal Plan</button>
-        </form>
-        {{ response | safe }}
       </div>
     </section>
   </main>
