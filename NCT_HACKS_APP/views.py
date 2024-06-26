@@ -30,13 +30,14 @@ genai.configure(api_key=os.environ['GEMINI_API_KEY'])
 model = genai.GenerativeModel('gemini-1.5-flash')
 from django.http import HttpResponseRedirect, HttpResponseServerError
 
-@login_required
 def index(request):
     return render(request, 'index.html')
 
+@login_required
 def dashboard_view(request):
     return render(request, 'dashboard.html')
 
+@login_required
 def meal_from_photo_view(request):
     if request.method == 'POST' and request.FILES['image']:
         try:
@@ -136,6 +137,7 @@ def parse_response(completion):
     
     return ai_response.strip(), ingredients, recipe_steps, instructions, health_benefits
 
+@login_required
 def MealSuggestionView(request):
     csv_file_path = r'cleaned-data.csv'
     df = load_csv(csv_file_path)
@@ -290,7 +292,7 @@ def preferences_view(request):
 
     return render(request, 'preferences.html')
 
-
+@login_required
 def logout_view(request):
     logout(request)
     return redirect('login')
